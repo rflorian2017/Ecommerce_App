@@ -47,7 +47,7 @@ public class CommentsController {
      * @param reviewId The id of the review.
      */
     @RequestMapping(value = "/reviews/{reviewId}", method = RequestMethod.POST)
-    public ResponseEntity<Comment> createCommentForReview(@PathVariable("reviewId") Integer reviewId, @RequestBody Comment comment) {
+    public ResponseEntity<Comment> createCommentForReview(@PathVariable("reviewId") String reviewId, @RequestBody Comment comment) {
         
     	Optional<Review> review = reviewRepository.findById(reviewId);
     	if(review.isPresent()) {
@@ -70,7 +70,7 @@ public class CommentsController {
      * @param reviewId The id of the review.
      */
     @RequestMapping(value = "/reviews/{reviewId}", method = RequestMethod.GET)
-    public ResponseEntity<List<Comment>> listCommentsForReview(@PathVariable("reviewId") Integer reviewId) {
+    public ResponseEntity<List<Comment>> listCommentsForReview(@PathVariable("reviewId") String reviewId) {
     	Optional<Review> review = reviewRepository.findById(reviewId);
     	if(review.isPresent()) {
     		commentRepository.findAllByReview(review.get());

@@ -1,25 +1,19 @@
 package com.udacity.course3.reviews.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-@Entity
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document("reviews")
 public class Review {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private String id;
 	
-	@Column
 	private String title;
 	
-	@Column
 	private String content;
 	
-	@Column
 	private int rating;
 	
 	@ManyToOne
@@ -38,10 +32,10 @@ public class Review {
 	public void setProduct(Product product) {
 		this.product = product;
 	}
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getTitle() {
