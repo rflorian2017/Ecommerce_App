@@ -1,5 +1,6 @@
 package com.udacity.course3.reviews.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,7 +12,10 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@Column
 	private String name;
+	
+	@Column
 	private String description;
 	public Integer getId() {
 		return id;

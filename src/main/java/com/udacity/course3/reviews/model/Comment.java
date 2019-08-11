@@ -1,5 +1,6 @@
 package com.udacity.course3.reviews.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,7 +14,10 @@ public class Comment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column
 	private String title;
+	
+	@Column
 	private String content;
 	
 	@ManyToOne
