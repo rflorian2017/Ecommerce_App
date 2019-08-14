@@ -48,7 +48,9 @@ public class CommentsController {
      */
     @RequestMapping(value = "/reviews/{reviewId}", method = RequestMethod.POST)
     public ResponseEntity<Comment> createCommentForReview(@PathVariable("reviewId") String reviewId, @RequestBody Comment comment) {
-        
+    	if (comment.isIncomplete()) {
+			return ResponseEntity.badRequest().build();
+		}
     	Optional<Review> review = reviewRepository.findById(reviewId);
     	if(review.isPresent()) {
     		comment.setReview(review.get());

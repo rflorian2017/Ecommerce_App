@@ -48,6 +48,9 @@ public class ReviewsController {
 	@RequestMapping(value = "/reviews/products/{productId}", method = RequestMethod.POST)
 	public ResponseEntity<Review> createReviewForProduct(@PathVariable("productId") Integer productId,
 			@RequestBody Review review) {
+		if (review.isIncomplete()) {
+			return ResponseEntity.badRequest().build();
+		}
 		Optional<Product> product = productRepository.findById(productId);
     	if(product.isPresent()) {
     		review.setProduct(product.get());

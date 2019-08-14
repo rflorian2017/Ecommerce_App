@@ -50,4 +50,7 @@ public class Comment {
 		this.content = content;
 	}
 
+	public boolean isIncomplete() {
+		return this.content == null || this.title == null;
+	}
 }

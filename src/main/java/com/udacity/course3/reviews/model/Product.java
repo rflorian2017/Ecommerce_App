@@ -36,5 +36,7 @@ public class Product {
 		this.description = description;
 	}
 	
-	
+	public boolean isIncomplete() {
+		return this.name == null || this.description == null;
+	}
 }

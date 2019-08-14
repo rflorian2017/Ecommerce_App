@@ -51,4 +51,7 @@ public class Review {
 		this.content = content;
 	}
 
+	public boolean isIncomplete() {
+		return this.content == null || this.title == null;
+	}
 }
