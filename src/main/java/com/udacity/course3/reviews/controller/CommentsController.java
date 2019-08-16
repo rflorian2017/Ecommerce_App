@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.udacity.course3.reviews.model.Comment;
 import com.udacity.course3.reviews.model.Review;
+import com.udacity.course3.reviews.model.ReviewDocument;
 import com.udacity.course3.reviews.repository.CommentRepository;
+import com.udacity.course3.reviews.repository.ReviewCommentRepository;
 import com.udacity.course3.reviews.repository.ReviewRepository;
 
 /**
@@ -29,11 +31,15 @@ public class CommentsController {
 	@Autowired
 	private ReviewRepository reviewRepository;
 	
+	@Autowired
+	private ReviewCommentRepository reviewCommentRepository;
+	
 
 	@Autowired
-    public CommentsController(CommentRepository commentRepository, ReviewRepository reviewRepository) {
+    public CommentsController(CommentRepository commentRepository, ReviewRepository reviewRepository, ReviewCommentRepository reviewCommentRepository) {
 		this.commentRepository = commentRepository;
 		this.reviewRepository = reviewRepository;
+		this.reviewCommentRepository = reviewCommentRepository;
 	}
 
 	/**
@@ -47,13 +53,19 @@ public class CommentsController {
      * @param reviewId The id of the review.
      */
     @RequestMapping(value = "/reviews/{reviewId}", method = RequestMethod.POST)
-    public ResponseEntity<Comment> createCommentForReview(@PathVariable("reviewId") String reviewId, @RequestBody Comment comment) {
+    public ResponseEntity<Comment> createCommentForReview(@PathVariable("reviewId") Integer reviewId, @RequestBody Comment comment) {
     	if (comment.isIncomplete()) {
 			return ResponseEntity.badRequest().build();
 		}
     	Optional<Review> review = reviewRepository.findById(reviewId);
     	if(review.isPresent()) {
     		comment.setReview(review.get());
+    		Optional<ReviewDocument> reviewDocument = reviewCommentRepository.findById(reviewId.toString());
+    		
+    		ReviewDocument actualReviewDocument = reviewDocument.get();
+    		actualReviewDocument.getComments().add(comment);
+    		reviewCommentRepository.save(actualReviewDocument);
+    		
     		return ResponseEntity.ok(commentRepository.save(comment));
 
     	}
@@ -72,7 +84,7 @@ public class CommentsController {
      * @param reviewId The id of the review.
      */
     @RequestMapping(value = "/reviews/{reviewId}", method = RequestMethod.GET)
-    public ResponseEntity<List<Comment>> listCommentsForReview(@PathVariable("reviewId") String reviewId) {
+    public ResponseEntity<List<Comment>> listCommentsForReview(@PathVariable("reviewId") Integer reviewId) {
     	Optional<Review> review = reviewRepository.findById(reviewId);
     	if(review.isPresent()) {
     		commentRepository.findAllByReview(review.get());

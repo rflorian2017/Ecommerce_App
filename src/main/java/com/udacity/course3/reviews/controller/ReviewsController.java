@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.udacity.course3.reviews.model.Product;
 import com.udacity.course3.reviews.model.Review;
+import com.udacity.course3.reviews.model.ReviewDocument;
 import com.udacity.course3.reviews.repository.ProductRepository;
+import com.udacity.course3.reviews.repository.ReviewCommentRepository;
 import com.udacity.course3.reviews.repository.ReviewRepository;
 
 /**
@@ -28,11 +30,15 @@ public class ReviewsController {
 
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private ReviewCommentRepository reviewCommentRepository;
 
 	@Autowired
-	protected ReviewsController(ReviewRepository reviewRepository, ProductRepository productRepository) {
+	protected ReviewsController(ReviewRepository reviewRepository, ProductRepository productRepository, ReviewCommentRepository reviewCommentRepository) {
 		this.reviewRepository = reviewRepository;
 		this.productRepository = productRepository;
+		this.reviewCommentRepository = reviewCommentRepository;
 	}
 
 	/**
@@ -54,7 +60,16 @@ public class ReviewsController {
 		Optional<Product> product = productRepository.findById(productId);
     	if(product.isPresent()) {
     		review.setProduct(product.get());
-    		return ResponseEntity.ok(reviewRepository.save(review));
+    		
+    		Review newReview = reviewRepository.save(review);
+    		
+    		ReviewDocument reviewDocument = new ReviewDocument();
+    		reviewDocument.setContent(newReview.getContent());
+    		reviewDocument.setId(newReview.getId().toString());
+    		reviewDocument.setTitle(newReview.getTitle());
+    		reviewCommentRepository.save(reviewDocument);
+    		
+    		return ResponseEntity.ok(newReview);
 
     	}
     	else {
